@@ -1,0 +1,23 @@
+{
+  "packageManager": "yarn@4.3.1",
+  "scripts": {
+    "cli": "node './node_modules/@thechristophe/openapi-typebox/dist/cli.js'"
+  },
+  "dependencies": {
+    "@thechristophe/openapi-typebox": "^0.0.0-dev.2"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8",
+    "@typescript-eslint/eslint-plugin": "^7",
+    "@typescript-eslint/parser": "^7",
+    "eslint": "^8",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-github": "^5.0.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prefer-arrow-functions": "^3.3.2",
+    "eslint-plugin-unused-imports": "^3",
+    "typescript": "^5.5"
+  },
+  "type": "module"
+}

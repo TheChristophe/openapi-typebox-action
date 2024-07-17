@@ -1,0 +1,78 @@
+name: 'Generate OpenAPI typebox api client'
+description: 'Generate typescript OpenAPI typebox esm client using openapi-typebox published to Github'
+inputs:
+  author:
+    description: 'Package author'
+    required: true
+    default: 'User'
+  package_name:
+    description: 'Package name'
+    required: true
+    default: 'api-client'
+  spec_file:
+    description: "OpenAPI specification"
+    required: false
+    default: 'api-spec.json'
+  repo_url:
+    description: 'Repository url'
+    required: false
+  archive_client:
+    description: "Upload archive of client source"
+    required: false
+    default: "false"
+  snapshot:
+    description: "Add snapshot timestamp to versions"
+    required: false
+    default: "false"
+  npm_registry:
+    description: "NPM registry"
+    required: false
+    default: "https://npm.pkg.github.com"
+  npm_token:
+    description: "NPM token (enables publishing)"
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Generate client
+      uses: docker://ghcr.io/thechristophe/openapi-typebox:0.0.0-dev.2
+      env:
+        OUT_DIR: ${{ github.workspace }}/client
+      with:
+        args: --package --package-name ${{ inputs.package_name }} --package-registry ${{ inputs.npm_registry }} ${{ inputs.snapshot == 'true' && '--snapshotVersion' || '' }} /github/workspace/${{ inputs.spec_file }}
+
+    - name: Archive client source
+      if: ${{ inputs.archive_client == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: client
+        path: ${{ github.workspace }}/client
+
+    - name: Cache client dependencies
+      if: ${{ inputs.npm_token != 'false' }}
+      uses: actions/setup-node@v3
+      with:
+        cache-dependency-path: ./client/package-lock.json
+        registry-url: ${{ inputs.npm_registry }}
+        node-version: '20.x'
+
+    - name: Install build dependencies
+      if: ${{ inputs.npm_token != 'false' }}
+      working-directory: ${{ github.workspace }}/client
+      run: npm install
+      shell: sh
+
+    - name: Publish client
+      if: ${{ inputs.npm_token != 'false' }}
+      working-directory: ${{ github.workspace }}/client
+      run: npm publish
+      shell: sh
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm_token }}

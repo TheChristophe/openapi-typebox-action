@@ -42,7 +42,7 @@ runs:
         node-version: 20
 
     - name: Generate client
-      uses: docker://ghcr.io/thechristophe/openapi-typebox:0.0.0-dev.2
+      uses: docker://ghcr.io/thechristophe/openapi-typebox:0.0.0-dev.3
       env:
         OUT_DIR: ${{ github.workspace }}/client
       with:

@@ -37,13 +37,11 @@ runs:
   using: "composite"
   steps:
     - name: Generate client
-      uses: docker://ghcr.io/thechristophe/openapi-typebox:0.0.0-dev.3
+      uses: docker://ghcr.io/thechristophe/openapi-typebox:v0
       env:
-        OUT_DIR: ${{ github.workspace }}/client
-      volumes:
-        - ${{ github.workspace }}/client:/app/client/out
+        OUT_DIR: /github/workspace/client
       with:
-        args: --package --package-name ${{ inputs.package_name }} --package-registry ${{ inputs.npm_registry }} ${{ inputs.snapshot == 'true' && '--snapshotVersion' || '' }} /app/client/out
+        args: --package --package-name ${{ inputs.package_name }} --package-registry ${{ inputs.npm_registry }} ${{ inputs.snapshot == 'true' && '--snapshotVersion' || '' }} /github/workspace/${{ inputs.spec_file }}
 
     - name: Setup node
       uses: actions/setup-node@v4

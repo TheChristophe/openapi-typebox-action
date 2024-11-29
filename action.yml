@@ -55,6 +55,14 @@ runs:
         name: client
         path: ${{ github.workspace }}/client
 
+    - name: Cache client dependencies
+      if: ${{ inputs.npm_token != 'false' }}
+      uses: actions/setup-node@v4
+      with:
+        cache-dependency-path: ${{ github.workspace }}/client/package-lock.json
+        registry-url: ${{ inputs.npm_registry }}
+        node-version: 22
+
     - name: Publish client
       if: ${{ inputs.npm_token != 'false' }}
       working-directory: ${{ github.workspace }}/client

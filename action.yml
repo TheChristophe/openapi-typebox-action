@@ -48,26 +48,12 @@ runs:
       with:
         node-version: 22
 
-    - name: Archive client source
+    - name: Archive client
       if: ${{ inputs.archive_client == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: client
         path: ${{ github.workspace }}/client
-
-    - name: Cache client dependencies
-      if: ${{ inputs.npm_token != 'false' }}
-      uses: actions/setup-node@v4
-      with:
-        cache-dependency-path: ${{ github.workspace }}/client/package-lock.json
-        registry-url: ${{ inputs.npm_registry }}
-        node-version: 22
-
-    - name: Install build dependencies
-      if: ${{ inputs.npm_token != 'false' }}
-      working-directory: ${{ github.workspace }}/client
-      run: npm install
-      shell: sh
 
     - name: Publish client
       if: ${{ inputs.npm_token != 'false' }}

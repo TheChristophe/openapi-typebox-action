@@ -58,7 +58,13 @@ runs:
     - name: Publish client
       if: ${{ inputs.npm_token != 'false' }}
       working-directory: ${{ github.workspace }}/client
-      run: npm publish
-      shell: sh
+      run: |
+        # try not being destructive
+        if [ -f .npmrc ]; then mv .npmrc .npmrc.bak; fi
+        echo "//$(sed -e 's;https\?://;;g' <<< '${{ inputs.npm_registry }}')/:_authToken=${{ inputs.npm_token }}" > .npmrc
+        npm publish
+        # restore previous
+        if [ -f .npmrc.bak ]; then mv .npmrc.bak .npmrc; else rm .npmrc; fi
+      shell: bash
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm_token }}

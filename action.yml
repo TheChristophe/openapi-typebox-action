@@ -37,7 +37,7 @@ runs:
   using: "composite"
   steps:
     - name: Generate client
-      uses: docker://ghcr.io/thechristophe/openapi-typebox:v0.0.5
+      uses: docker://ghcr.io/thechristophe/openapi-typebox:v0.0.6
       env:
         OUT_DIR: /github/workspace/client
       with:
